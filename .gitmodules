@@ -1,7 +1,7 @@
 [submodule "sources/bitbake"]
 	path = sources/bitbake
 	url = ../bitbake.git
-	branch = nilrt/master/dunfell
+	branch = dev/bitbake_timeout
 [submodule "sources/meta-cloud-services"]
 	path = sources/meta-cloud-services
 	url = ../meta-cloud-services.git
