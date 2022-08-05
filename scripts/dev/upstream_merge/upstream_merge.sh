@@ -28,6 +28,7 @@ usage() {
 
 parse_args() {
    local OPTIND o
+
    while getopts "c:h" o; do
       case "${o}" in
          c)
@@ -47,7 +48,8 @@ parse_args() {
 }
 
 sanity_test_repo() {
-   LOCAL_BASE_BRANCH=$1
+   local LOCAL_BASE_BRANCH=$1
+
    if ! $(git rev-parse --verify $LOCAL_BASE_BRANCH &> /dev/null); then
       echo ""
       echo "    Branch $LOCAL_BASE_BRANCH does not exist. Exiting"
@@ -56,7 +58,8 @@ sanity_test_repo() {
 }
 
 update_local_base_branch() {
-   LOCAL_BASE_BRANCH=$1
+   local LOCAL_BASE_BRANCH=$1
+
    if $(git checkout $LOCAL_BASE_BRANCH &> /dev/null); then
       if ! $(git pull &> /dev/null); then
          echo ""
@@ -72,15 +75,15 @@ update_local_base_branch() {
 }
 
 add_remote() {
-   UPSTREAM_REPO=$1
+   local UPSTREAM_REPO=$1
 
    git remote remove $REMOTE_REPO_NAME &> /dev/null || true
    git remote add $REMOTE_REPO_NAME $UPSTREAM_REPO
 }
 
 sync_remote_branch() {
-   UPSTREAM_BRANCH=$1
-   LOCAL_UPSTREAM_BRANCH=$2
+   local UPSTREAM_BRANCH=$1
+   local LOCAL_UPSTREAM_BRANCH=$2
 
    git branch -D $LOCAL_UPSTREAM_BRANCH &> /dev/null || true
    if ! $(git fetch $REMOTE_REPO_NAME $UPSTREAM_BRANCH:$LOCAL_UPSTREAM_BRANCH &> /dev/null); then
@@ -92,7 +95,8 @@ sync_remote_branch() {
 
 # Returns 1 if repo should be skipped, 0 if not
 handle_existing_local_branch() {
-   LOCAL_BASE_BRANCH=$1
+   local LOCAL_BASE_BRANCH=$1
+
    while true; do
       echo ""
       echo "    Branch $LOCAL_BRANCH_NAME already exists"
@@ -115,7 +119,8 @@ handle_existing_local_branch() {
 
 # Returns 1 if repo should be skipped, 0 if not
 create_local_branch() {
-   LOCAL_BASE_BRANCH=$1
+   local LOCAL_BASE_BRANCH=$1
+
    if $(git rev-parse --verify $LOCAL_BRANCH_NAME &> /dev/null); then
       # Branch already exists
       if ! handle_existing_local_branch $LOCAL_BASE_BRANCH; then
@@ -132,8 +137,8 @@ create_local_branch() {
 
 # Returns 0 if non empty merge and 1 for empty/no merge
 is_non_empty_merge() {
-   COMMIT_BEFORE_MERGE=$1
-   COMMIT_AFTER_MERGE=$(git rev-parse HEAD)
+   local COMMIT_BEFORE_MERGE=$1
+   local COMMIT_AFTER_MERGE=$(git rev-parse HEAD)
 
    if [ "$COMMIT_BEFORE_MERGE" == "$COMMIT_AFTER_MERGE" ]; then
       # No merge commit
@@ -150,9 +155,10 @@ is_non_empty_merge() {
 }
 
 merge_upstream_branch() {
-   LOCAL_UPSTREAM_BRANCH=$1
+   local LOCAL_UPSTREAM_BRANCH=$1
 
-   COMMIT_BEFORE_MERGE=$(git rev-parse HEAD)
+   local COMMIT_BEFORE_MERGE=$(git rev-parse HEAD)
+
    if $(git merge $LOCAL_UPSTREAM_BRANCH --signoff -m "Merge latest upstream" &> /dev/null); then
       if is_non_empty_merge $COMMIT_BEFORE_MERGE; then
          echo " ... OK"
@@ -165,11 +171,11 @@ merge_upstream_branch() {
 }
 
 handle_repo() {
-   LOCAL_REPO=$1
-   UPSTREAM_REPO=$2
-   UPSTREAM_BRANCH=$3
-   LOCAL_BASE_BRANCH=$4
-   LOCAL_UPSTREAM_BRANCH="$LOCAL_UPSTREAM_BRANCH_PREFIX/$UPSTREAM_BRANCH"
+   local LOCAL_REPO=$1
+   local UPSTREAM_REPO=$2
+   local UPSTREAM_BRANCH=$3
+   local LOCAL_BASE_BRANCH=$4
+   local LOCAL_UPSTREAM_BRANCH="$LOCAL_UPSTREAM_BRANCH_PREFIX/$UPSTREAM_BRANCH"
 
    pushd $LOCAL_REPO &> /dev/null
    echo -n $LOCAL_REPO
@@ -188,15 +194,15 @@ handle_repo() {
 }
 
 main() {
-
    while read -u 10 line; do
       if [[ "$line" =~ ^#.* ]]; then
          continue
       fi
-      LOCAL_REPO=$(echo $line | awk '{print $1}')
-      UPSTREAM_REPO=$(echo $line | awk '{print $2}')
-      UPSTREAM_BRANCH=$(echo $line | awk '{print $3}')
-      LOCAL_BASE_BRANCH=$(echo $line | awk '{print $4}')
+
+      local LOCAL_REPO=$(echo $line | awk '{print $1}')
+      local UPSTREAM_REPO=$(echo $line | awk '{print $2}')
+      local UPSTREAM_BRANCH=$(echo $line | awk '{print $3}')
+      local LOCAL_BASE_BRANCH=$(echo $line | awk '{print $4}')
 
       handle_repo $LOCAL_REPO $UPSTREAM_REPO $UPSTREAM_BRANCH $LOCAL_BASE_BRANCH
    done 10< $CONF_FILE
