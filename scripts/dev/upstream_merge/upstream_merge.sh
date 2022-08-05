@@ -24,7 +24,6 @@ LOCAL_BRANCH_NAME="dev/automerge/ni"
 
 usage() {
    echo "Usage: $0 [-c <conf file>][-h] " 1>&2
-   exit 1
 }
 
 parse_args() {
@@ -36,9 +35,11 @@ parse_args() {
             ;;
          h)
             usage
+            exit 0
             ;;
          *)
             usage
+            exit 1
             ;;
       esac
    done
