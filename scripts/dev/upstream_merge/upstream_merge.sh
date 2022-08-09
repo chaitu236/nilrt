@@ -8,18 +8,16 @@
 # 2. Checkout local_base_branch and run git pull
 # 3. Add a 'remote' named 'automerge_upstream'
 #    a. If the remote already exists, remove it first
-# 4. Pulls remote branch into a branch named 'dev/automerge/upstream/<upstream_branch>'
-#    a. If the branch name already exists, remove it first
+# 4. Fetches remote branch
 # 5. Creates a branch named 'dev/automerge/ni' from 'nilrt/master/hardknott' and checkout
 #    a. If the branch name exists, ask to delete or skip or cancel
-# 6. Merges 'dev/automerge/upstream' into 'dev/automerge/ni'
+# 6. Merges 'automerge_upstream/$LOCAL_BRANCH_NAME' into 'dev/automerge/ni'
 #    a. Success or failure is reported; script continues in either case
 
 DIR=$(dirname ${BASH_SOURCE})
 CONF_FILE="$DIR/repos.conf"
 
 REMOTE_REPO_NAME="automerge_upstream"
-LOCAL_UPSTREAM_BRANCH_PREFIX="dev/automerge/upstream"
 LOCAL_BRANCH_NAME="dev/automerge/ni"
 
 usage() {
@@ -81,15 +79,13 @@ add_remote() {
    git remote add $REMOTE_REPO_NAME $UPSTREAM_REPO
 }
 
-sync_remote_branch() {
+fetch_remote_branch() {
    local UPSTREAM_BRANCH=$1
-   local LOCAL_UPSTREAM_BRANCH=$2
 
-   git branch -D $LOCAL_UPSTREAM_BRANCH &> /dev/null || true
-   if ! $(git fetch $REMOTE_REPO_NAME $UPSTREAM_BRANCH:$LOCAL_UPSTREAM_BRANCH &> /dev/null); then
-      echo ""
-      echo "    Error fetching $REMOTE_REPO_NAME:$UPSTREAM_BRANCH. Exiting"
-      exit 1
+   if ! $(git fetch $REMOTE_REPO_NAME $UPSTREAM_BRANCH &> /dev/null); then
+         echo ""
+         echo "    Error fetching $UPSTREAM_BRANCH from $REMOTE_REPO_NAME. Exiting"
+         exit 1
    fi
 }
 
@@ -155,11 +151,11 @@ is_non_empty_merge() {
 }
 
 merge_upstream_branch() {
-   local LOCAL_UPSTREAM_BRANCH=$1
+   local UPSTREAM_BRANCH=$1
 
    local COMMIT_BEFORE_MERGE=$(git rev-parse HEAD)
 
-   if $(git merge $LOCAL_UPSTREAM_BRANCH --signoff -m "Merge latest upstream" &> /dev/null); then
+   if $(git merge $REMOTE_REPO_NAME/$UPSTREAM_BRANCH --signoff -m "Merge latest upstream" &> /dev/null); then
       if is_non_empty_merge $COMMIT_BEFORE_MERGE; then
          echo " ... OK"
       else
@@ -175,7 +171,6 @@ handle_repo() {
    local UPSTREAM_REPO=$2
    local UPSTREAM_BRANCH=$3
    local LOCAL_BASE_BRANCH=$4
-   local LOCAL_UPSTREAM_BRANCH="$LOCAL_UPSTREAM_BRANCH_PREFIX/$UPSTREAM_BRANCH"
 
    pushd $LOCAL_REPO &> /dev/null
    echo -n $LOCAL_REPO
@@ -183,11 +178,11 @@ handle_repo() {
    sanity_test_repo $LOCAL_BASE_BRANCH
    update_local_base_branch $LOCAL_BASE_BRANCH
    add_remote $UPSTREAM_REPO
-   sync_remote_branch $UPSTREAM_BRANCH $LOCAL_UPSTREAM_BRANCH
+   fetch_remote_branch $UPSTREAM_BRANCH
    if ! create_local_branch $LOCAL_BASE_BRANCH; then
       echo " ... SKIPPED"
    else
-      merge_upstream_branch $LOCAL_UPSTREAM_BRANCH
+      merge_upstream_branch $UPSTREAM_BRANCH
    fi
 
    popd &> /dev/null
