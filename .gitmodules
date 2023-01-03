@@ -1,56 +1,56 @@
 [submodule "sources/bitbake"]
 	path = sources/bitbake
-	url = ../bitbake.git
+	url = ../../ni/bitbake.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-cloud-services"]
 	path = sources/meta-cloud-services
-	url = ../meta-cloud-services.git
+	url = ../../ni/meta-cloud-services.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-openembedded"]
 	path = sources/meta-openembedded
-	url = ../meta-openembedded.git
+	url = ../../ni/meta-openembedded.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-nilrt"]
 	path = sources/meta-nilrt
-	url = ../meta-nilrt.git
+	url = ../../ni/meta-nilrt.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-selinux"]
 	path = sources/meta-selinux
-	url = ../meta-selinux.git
+	url = ../../ni/meta-selinux.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/openembedded-core"]
 	path = sources/openembedded-core
-	url = ../openembedded-core.git
+	url = ../../ni/openembedded-core.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-mingw"]
 	path = sources/meta-mingw
-	url = ../meta-mingw.git
+	url = ../../ni/meta-mingw.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-virtualization"]
 	path = sources/meta-virtualization
-	url = ../meta-virtualization.git
+	url = ../../ni/meta-virtualization.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-security"]
 	path = sources/meta-security
-	url = ../meta-security.git
+	url = ../../ni/meta-security.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-sdr"]
 	path = sources/meta-sdr
-	url = ../meta-sdr.git
+	url = ../../ni/meta-sdr.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-qt5"]
 	path = sources/meta-qt5
-	url = ../meta-qt5.git
+	url = ../../ni/meta-qt5.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-qt5-extra"]
 	path = sources/meta-qt5-extra
-	url = ../meta-qt5-extra.git
+	url = ../../ni/meta-qt5-extra.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/meta-rauc"]
 	path = sources/meta-rauc
-	url = ../meta-rauc.git
+	url = ../../ni/meta-rauc.git
 	branch = nilrt/master/kirkstone
 [submodule "sources/pyrex"]
 	path = sources/pyrex
-	url = ../pyrex.git
+	url = ../../ni/pyrex.git
 	branch = nilrt/master/kirkstone
