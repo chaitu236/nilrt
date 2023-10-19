@@ -8,7 +8,7 @@ jobs:
     name: Drivers-NIBuildFarm-RFMIBUILD
     demands:
       - Agent.OS -equals Linux
-      - vm_tier -equals 3
+      - vm_tier -equals 2
   steps:
   - checkout: self
     submodules: true
