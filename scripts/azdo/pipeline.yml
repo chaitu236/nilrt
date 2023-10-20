@@ -13,7 +13,7 @@ jobs:
     submodules: true
   - script: |
       echo "Hello World!"
-      echo "prbuild 1.3"
+      echo "prbuild 2.0"
       #export MACHINE=x64
       #source ni-oe-init-build-env
       #bitbake packagegroup-ni-coreimagerepo
